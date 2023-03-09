@@ -3,10 +3,12 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import type { NextPageWithLayout } from 'types';
 import { AppLayout } from 'components/AppLayout';
 import type { AppLayoutProps } from 'components/AppLayout';
+import { getAppProps } from 'utils/get-app-props';
+import { GetServerSidePropsContext } from 'next';
 
 export interface TokenTopupPageProps {}
 
-const TokenTopupPage: NextPageWithLayout<TokenTopupPageProps> = () => {
+const TokenTopupPage: NextPageWithLayout<TokenTopupPageProps> = (props) => {
   const buttonClickHandler = async () => {
     await fetch('/api/add-tokens', {
       method: 'POST'
@@ -27,11 +29,13 @@ TokenTopupPage.getLayout = (page: React.ReactElement, pageProps: AppLayoutProps)
   return <AppLayout {...pageProps}>{page}</AppLayout>;
 };
 
-/* @ts-ignore */
-export const getServerSideProps = withPageAuthRequired(() => {
-  return {
-    props: {}
-  };
+export const getServerSideProps = withPageAuthRequired({
+  async getServerSideProps(ctx: GetServerSidePropsContext) {
+    const props = await getAppProps(ctx);
+    return {
+      props
+    };
+  }
 });
 
 export default TokenTopupPage;

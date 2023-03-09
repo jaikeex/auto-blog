@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Configuration, OpenAIApi } from 'openai';
 import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0';
-import clientPromise from '../../../lib/mongodb';
+import clientPromise from 'lib/mongodb';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { user } = await getSession(req, res);
@@ -11,11 +11,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     auth0Id: user.sub
   });
 
-  if (!userProfile?.availableTokens) {
-    res.status(403);
-    return;
-  }
-
   const config = new Configuration({
     apiKey: process.env.OPENAI_API_KEY
   });
@@ -23,6 +18,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const topic = req.body.topic;
   const keywords = req.body.keywords;
+
+  if (!userProfile?.availableTokens || !topic) {
+    res.status(403);
+    return;
+  }
 
   const response = await openAI.createCompletion({
     model: 'text-davinci-003',
@@ -63,7 +63,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     created: new Date()
   });
 
-  res.status(200).json({ post });
+  res.status(200).json({ postId: post.insertedId });
 };
 
 /* @ts-ignore */

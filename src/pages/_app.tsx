@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <UserProvider>
       <main className={`${openSans.variable} ${dmSerifDisplay.variable} font-body`}>
-        {getLayout(<Component {...pageProps} />)}
+        {getLayout(<Component {...pageProps} />, pageProps)}
       </main>
     </UserProvider>
   );

@@ -4,13 +4,16 @@ import { AppLayout } from 'components/AppLayout';
 import type { AppLayoutProps } from 'components/AppLayout';
 import type { NextPageWithLayout } from 'types';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next';
+import { getAppProps } from 'utils/get-app-props';
 
 export interface NewPostPageProps {}
 
 const NewPostPage: NextPageWithLayout<NewPostPageProps> = (props) => {
-  const [postContent, setPostContent] = useState<string>('');
   const [topic, setTopic] = useState<string>('');
   const [keywords, setKeywords] = useState<string>('');
+  const router = useRouter();
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -20,7 +23,9 @@ const NewPostPage: NextPageWithLayout<NewPostPageProps> = (props) => {
       body: JSON.stringify({ topic, keywords })
     });
     const json = await response.json();
-    setPostContent(json.post.content);
+    if (json?.postId) {
+      router.push(`/post/${json.postId}`);
+    }
   };
 
   const topicInputChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -59,8 +64,6 @@ const NewPostPage: NextPageWithLayout<NewPostPageProps> = (props) => {
           Generate
         </button>
       </form>
-
-      <div dangerouslySetInnerHTML={{ __html: postContent }} className="max-w-screen-sm p-10"></div>
     </div>
   );
 };
@@ -69,11 +72,13 @@ NewPostPage.getLayout = (page: React.ReactElement, pageProps: AppLayoutProps) =>
   return <AppLayout {...pageProps}>{page}</AppLayout>;
 };
 
-/* @ts-ignore */
-export const getServerSideProps = withPageAuthRequired(() => {
-  return {
-    props: {}
-  };
+export const getServerSideProps = withPageAuthRequired({
+  async getServerSideProps(ctx: GetServerSidePropsContext) {
+    const props = await getAppProps(ctx);
+    return {
+      props
+    };
+  }
 });
 
 export default NewPostPage;
