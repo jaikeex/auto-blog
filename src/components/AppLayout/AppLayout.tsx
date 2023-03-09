@@ -16,10 +16,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children = null }) => {
       <div className="flex flex-col text-white overflow-hidden">
         <div className="bg-slate-800 px-2">
           <Logo />
-          <Link
-            href="/post/new"
-            className="bg-green-500 tracking-wider w-full text-center text-white font-bold cursor-pointer uppercase px-4 py-2 rounded-md hover:bg-green-600 transition-colors block"
-          >
+          <Link href="/post/new" className="btn">
             New post
           </Link>
           <Link href="/token-topup" className="block mt-2 text-center">
@@ -46,7 +43,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children = null }) => {
           )}
         </div>
       </div>
-      <div className="bg-yellow-500">{children}</div>
+      <div className="">{children}</div>
     </div>
   );
 };
