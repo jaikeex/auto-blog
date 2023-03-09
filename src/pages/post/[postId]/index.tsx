@@ -8,6 +8,7 @@ export default function PostPage() {
   );
 }
 
+/* @ts-ignore */
 export const getServerSideProps = withPageAuthRequired(() => {
   return {
     props: {}

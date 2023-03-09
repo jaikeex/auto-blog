@@ -1,7 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Configuration, OpenAIApi } from 'openai';
+import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0';
+import clientPromise from '../../../lib/mongodb';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { user } = await getSession(req, res);
+  const client = await clientPromise;
+  const db = await client.db('autoblog');
+  const userProfile = await db.collection('users').findOne({
+    auth0Id: user.sub
+  });
+
+  if (!userProfile?.availableTokens) {
+    res.status(403);
+    return;
+  }
+
   const config = new Configuration({
     apiKey: process.env.OPENAI_API_KEY
   });
@@ -27,7 +41,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }`
   });
 
-  res.status(200).json({ post: response.data.choices[0]?.text.replaceAll('\n', '') });
+  await db.collection('users').updateOne(
+    {
+      auth0Id: user.sub
+    },
+    {
+      $inc: {
+        availableTokens: -1
+      }
+    }
+  );
+
+  const parsed = JSON.parse(response.data.choices[0]?.text.replaceAll('\n', ''));
+  const post = await db.collection('posts').insertOne({
+    title: parsed?.title,
+    content: parsed?.content,
+    description: parsed?.description,
+    topic,
+    keywords,
+    userId: userProfile._id,
+    created: new Date()
+  });
+
+  res.status(200).json({ post });
 };
 
-export default handler;
+/* @ts-ignore */
+export default withApiAuthRequired(handler);

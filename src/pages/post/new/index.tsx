@@ -14,13 +14,13 @@ const NewPostPage: NextPageWithLayout<NewPostPageProps> = (props) => {
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-    const response = await fetch(`/api/generatePost`, {
+    const response = await fetch(`/api/generate-post`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ topic, keywords })
     });
     const json = await response.json();
-    setPostContent(JSON.parse(json.post).content);
+    setPostContent(json.post.content);
   };
 
   const topicInputChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -69,6 +69,7 @@ NewPostPage.getLayout = (page: React.ReactElement, pageProps: AppLayoutProps) =>
   return <AppLayout {...pageProps}>{page}</AppLayout>;
 };
 
+/* @ts-ignore */
 export const getServerSideProps = withPageAuthRequired(() => {
   return {
     props: {}
