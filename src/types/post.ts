@@ -3,4 +3,5 @@ export interface Post {
   content: string;
   description: string;
   _id: string;
+  created: string;
 }

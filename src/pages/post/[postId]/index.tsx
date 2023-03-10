@@ -9,16 +9,55 @@ import { ObjectId } from 'mongodb';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { getAppProps } from 'utils/get-app-props';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { usePostContext } from 'store/postsContext';
 
 export interface PostPageProps {
   title?: string;
   content?: string;
   description?: string;
   keywords?: string;
+  postId?: string;
 }
 
 /* @ts-ignore */
-const PostPage: NextPageWithLayout<PostPageProps> = ({ title = '', content = '', description = '', keywords = '' }) => {
+const PostPage: NextPageWithLayout<PostPageProps> = ({
+  title = '',
+  content = '',
+  description = '',
+  keywords = '',
+  postId = ''
+}) => {
+  const router = useRouter();
+  const { deletePost } = usePostContext();
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<boolean>(false);
+
+  const deleteButtonClickHandler = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const cancelDeleteButtonClickHandler = () => {
+    setShowDeleteConfirmation(false);
+  };
+
+  const deletePostHandler = async () => {
+    try {
+      const response = await fetch('/api/delete-post', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({ postId })
+      });
+      const json = await response.json();
+      if (json.success) {
+        deletePost(postId);
+        router.replace('/post/new');
+      }
+    } catch (error) {}
+  };
+
   return (
     <div className="overflow-auto h-full">
       <div className="max-w-screen-sm mx-auto">
@@ -38,6 +77,26 @@ const PostPage: NextPageWithLayout<PostPageProps> = ({ title = '', content = '',
         </div>
         <div className="text-sm font-bold mt-6 p-2 bg-stone-200 rounded-sm">Blog post</div>
         <div>{parse(content)}</div>
+        {!showDeleteConfirmation && (
+          <div className="my-4">
+            <button onClick={deleteButtonClickHandler} className="btn bg-red-600 hover:bg-red-700">
+              Delete post
+            </button>
+          </div>
+        )}
+        {!!showDeleteConfirmation && (
+          <div>
+            <p className="p-2 bg-red-300 text-center">Are you sure you want to delete this post?</p>
+            <div className="grid grid-cols-2 gap-2">
+              <button onClick={cancelDeleteButtonClickHandler} className="btn bg-stone-600 hover:bg-stone-700">
+                Cancel
+              </button>
+              <button onClick={deletePostHandler} className="btn bg-red-600 hover:bg-red-700">
+                Confirm
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -75,6 +134,7 @@ export const getServerSideProps = withPageAuthRequired({
         content: post.content,
         description: post.description,
         keywords: post.keywords,
+        created: post.created.toString(),
         ...props
       }
     };

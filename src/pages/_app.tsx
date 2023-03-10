@@ -4,6 +4,7 @@ import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { AppPropsWithLayout } from 'types/page-with-layout';
 import { Open_Sans, DM_Serif_Display } from '@next/font/google';
 import { config } from '@fortawesome/fontawesome-svg-core';
+import { PostsProvider } from 'store/postsContext';
 
 // config.autoAddCss = false;
 
@@ -24,9 +25,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <UserProvider>
-      <main className={`${openSans.variable} ${dmSerifDisplay.variable} font-body`}>
-        {getLayout(<Component {...pageProps} />, pageProps)}
-      </main>
+      <PostsProvider>
+        <main className={`${openSans.variable} ${dmSerifDisplay.variable} font-body`}>
+          {getLayout(<Component {...pageProps} />, pageProps)}
+        </main>
+      </PostsProvider>
     </UserProvider>
   );
 }

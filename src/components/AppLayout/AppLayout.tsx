@@ -1,21 +1,40 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins } from '@fortawesome/free-solid-svg-icons';
 import { Logo } from 'components/Logo';
 import { Post } from 'types/post';
+import { usePostContext } from '../../store/postsContext';
 
 export interface AppLayoutProps extends React.PropsWithChildren {
   availableTokens?: number;
   posts: Post[];
   postId?: string;
+  created?: string;
 }
 
-const AppLayout: React.FC<AppLayoutProps> = ({ children = null, availableTokens = 0, posts = [], postId = '' }) => {
+const AppLayout: React.FC<AppLayoutProps> = ({
+  children = null,
+  availableTokens = 0,
+  posts: postsFromSSR = [],
+  postId = '',
+  created = ''
+}) => {
   const { user } = useUser();
-  console.log(posts);
+
+  const { setPostsFromSSR, loadPosts, posts, allPostsLoaded } = usePostContext();
+  const loadPostsClickHandler = () => {
+    loadPosts(posts.at(-1).created);
+  };
+
+  useEffect(() => {
+    if (postId && !postsFromSSR.find((post) => post._id === postId)) {
+      loadPosts(created, true);
+    }
+    setPostsFromSSR(postsFromSSR);
+  }, [postId, postsFromSSR, setPostsFromSSR, created, loadPosts]);
 
   return (
     <div className="grid grid-cols-[300px_1fr] h-screen max-h-screen">
@@ -42,6 +61,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children = null, availableTokens 
               {post.title}
             </Link>
           ))}
+          <div
+            onClick={loadPostsClickHandler}
+            className={`hover: underline text-sm text-slate-400 text-center cursor-pointer mt-4 ${
+              allPostsLoaded && 'hidden'
+            }`}
+          >
+            Load more posts
+          </div>
         </div>
         <div className="bg-cyan-800 flex items-center gap-2 border-t border-t-black/50 h-20 px-2">
           {!!user ? (
