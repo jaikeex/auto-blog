@@ -6,29 +6,17 @@ import type { AppLayoutProps } from 'components/AppLayout';
 import { getAppProps } from 'utils/get-app-props';
 import { GetServerSidePropsContext } from 'next';
 
-export interface TokenTopupPageProps {}
+export interface SuccessPageProps {}
 
-const TokenTopupPage: NextPageWithLayout<TokenTopupPageProps> = (props) => {
-  const buttonClickHandler = async () => {
-    const response = await fetch('/api/add-tokens', {
-      method: 'POST'
-    });
-
-    const json = await response.json();
-    window.location.href = json.session.url;
-  };
-
+const SuccessPage: NextPageWithLayout<SuccessPageProps> = (props) => {
   return (
     <div>
-      <h1>This is the token topup page</h1>
-      <button className="btn" onClick={buttonClickHandler}>
-        Add tokens
-      </button>
+      <h1>Thank you for your purchase!</h1>
     </div>
   );
 };
 
-TokenTopupPage.getLayout = (page: React.ReactElement, pageProps: AppLayoutProps) => {
+SuccessPage.getLayout = (page: React.ReactElement, pageProps: AppLayoutProps) => {
   return <AppLayout {...pageProps}>{page}</AppLayout>;
 };
 
@@ -41,4 +29,4 @@ export const getServerSideProps = withPageAuthRequired({
   }
 });
 
-export default TokenTopupPage;
+export default SuccessPage;
