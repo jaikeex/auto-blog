@@ -10,7 +10,7 @@ export interface SuccessPageProps {}
 
 const SuccessPage: NextPageWithLayout<SuccessPageProps> = (props) => {
   return (
-    <div>
+    <div className="w-full flex justify-center items-center h-screen max-h-80">
       <h1>Thank you for your purchase!</h1>
     </div>
   );

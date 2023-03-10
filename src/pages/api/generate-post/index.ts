@@ -19,7 +19,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const topic = req.body.topic;
   const keywords = req.body.keywords;
 
-  if (!userProfile?.availableTokens || !topic) {
+  if (!topic || !keywords) {
+    res.status(400);
+    return;
+  }
+
+  if (topic.trim().length > 100 || keywords.trim().length > 100) {
+    res.status(400);
+    return;
+  }
+
+  if (!userProfile?.availableTokens) {
     res.status(403);
     return;
   }

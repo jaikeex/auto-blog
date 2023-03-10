@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { withPageAuthRequired, getSession } from '@auth0/nextjs-auth0';
-import { AppLayout } from 'components/AppLayout';
+import { AppLayout, AppLayoutProps } from 'components/AppLayout';
 import parse from 'html-react-parser';
 import type { NextPageWithLayout } from 'types';
 import { GetServerSidePropsContext } from 'next';
@@ -17,13 +17,8 @@ export interface PostPageProps {
   keywords?: string;
 }
 
-const PostPage: NextPageWithLayout<PostPageProps> = ({
-  title = '',
-  content = '',
-  description = '',
-  keywords = '',
-  ...props
-}) => {
+/* @ts-ignore */
+const PostPage: NextPageWithLayout<PostPageProps> = ({ title = '', content = '', description = '', keywords = '' }) => {
   return (
     <div className="overflow-auto h-full">
       <div className="max-w-screen-sm mx-auto">
@@ -86,7 +81,8 @@ export const getServerSideProps = withPageAuthRequired({
   }
 });
 
-PostPage.getLayout = (page: React.ReactElement, pageProps: PostPageProps) => {
+/* @ts-ignore */
+PostPage.getLayout = (page: React.ReactElement, pageProps: AppLayoutProps) => {
   return <AppLayout {...pageProps}>{page}</AppLayout>;
 };
 

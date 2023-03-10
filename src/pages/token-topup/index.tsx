@@ -19,9 +19,8 @@ const TokenTopupPage: NextPageWithLayout<TokenTopupPageProps> = (props) => {
   };
 
   return (
-    <div>
-      <h1>This is the token topup page</h1>
-      <button className="btn" onClick={buttonClickHandler}>
+    <div className="flex justify-center items-center">
+      <button className="btn max-w-screen-sm " onClick={buttonClickHandler}>
         Add tokens
       </button>
     </div>

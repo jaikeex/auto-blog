@@ -4,7 +4,7 @@ import { faBrain } from '@fortawesome/free-solid-svg-icons';
 
 export interface LogoProps {}
 
-const Logo: React.FC<LogoProps> = (props) => {
+const Logo: React.FC<LogoProps> = () => {
   return (
     <div className="text-3xl text-center py-4 font-heading">
       AutoBlog
