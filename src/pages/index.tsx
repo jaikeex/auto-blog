@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-import HeroImage from '../../public/hero.webp';
-import { Logo } from 'components/Logo';
 import Link from 'next/link';
+import HeroImage from 'public/hero.webp';
+import { Logo, Button } from 'components';
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
           without sacrificing your time.
         </p>
         <Link href="/post/new" className="btn mt-6">
-          Begin
+          <Button>Begin</Button>
         </Link>
       </div>
     </div>

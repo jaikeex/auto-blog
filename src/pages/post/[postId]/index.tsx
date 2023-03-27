@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { withPageAuthRequired, getSession } from '@auth0/nextjs-auth0';
-import { AppLayout, AppLayoutProps } from 'components/AppLayout';
 import parse from 'html-react-parser';
 import type { NextPageWithLayout } from 'types';
 import { GetServerSidePropsContext } from 'next';
 import clientPromise from 'lib/mongodb';
 import { ObjectId } from 'mongodb';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { getAppProps } from 'utils/get-app-props';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { usePostContext } from 'store/postsContext';
+import { Button, Alert, Post, AppLayout } from 'components';
+import type { AppLayoutProps } from 'components';
 
 export interface PostPageProps {
   title?: string;
@@ -50,7 +49,9 @@ const PostPage: NextPageWithLayout<PostPageProps> = ({
         },
         body: JSON.stringify({ postId })
       });
+
       const json = await response.json();
+
       if (json.success) {
         deletePost(postId);
         router.replace('/post/new');
@@ -61,39 +62,26 @@ const PostPage: NextPageWithLayout<PostPageProps> = ({
   return (
     <div className="overflow-auto h-full">
       <div className="max-w-screen-sm mx-auto">
-        <div className="text-sm font-bold mt-6 p-2 bg-stone-200 rounded-sm">Title and description</div>
-        <div className="p-4 my-2 border border-stone-200, rounded-md">
-          <div className="text-blue-600 text-2xl font-bold">{title}</div>
-          <div className="mt-2 ">{description}</div>
-        </div>
-        <div className="text-sm font-bold mt-6 p-2 bg-stone-200 rounded-sm">Keywords</div>
-        <div className="flex flex-wrap pt-2 gap-1">
-          {keywords.split(',').map((keyword, index) => (
-            <div key={index} className="rounded-full p-2 bg-slate-800 text-white">
-              <FontAwesomeIcon icon={faHashtag} className="mr-1" />
-              {keyword}
-            </div>
-          ))}
-        </div>
-        <div className="text-sm font-bold mt-6 p-2 bg-stone-200 rounded-sm">Blog post</div>
-        <div>{parse(content)}</div>
+        <Post description={description} keywords={keywords} title={title}>
+          {parse(content)}
+        </Post>
         {!showDeleteConfirmation && (
           <div className="my-4">
-            <button onClick={deleteButtonClickHandler} className="btn bg-red-600 hover:bg-red-700">
+            <Button onClick={deleteButtonClickHandler} className="bg-red-600 hover:bg-red-700">
               Delete post
-            </button>
+            </Button>
           </div>
         )}
         {!!showDeleteConfirmation && (
           <div>
-            <p className="p-2 bg-red-300 text-center">Are you sure you want to delete this post?</p>
+            <Alert>Are you sure you want to delete this post?</Alert>
             <div className="grid grid-cols-2 gap-2">
-              <button onClick={cancelDeleteButtonClickHandler} className="btn bg-stone-600 hover:bg-stone-700">
+              <Button onClick={cancelDeleteButtonClickHandler} className="bg-stone-600 hover:bg-stone-700">
                 Cancel
-              </button>
-              <button onClick={deletePostHandler} className="btn bg-red-600 hover:bg-red-700">
+              </Button>
+              <Button onClick={deletePostHandler} className="bg-red-600 hover:bg-red-700">
                 Confirm
-              </button>
+              </Button>
             </div>
           </div>
         )}
