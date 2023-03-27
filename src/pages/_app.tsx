@@ -1,7 +1,7 @@
 import * as React from 'react';
 import 'styles/globals.css';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
-import { AppPropsWithLayout } from 'types/page-with-layout';
+import { AppPropsWithLayout } from 'types/pageWithLayout';
 import { Open_Sans, DM_Serif_Display } from '@next/font/google';
 import { PostsProvider } from 'store/postsContext';
 

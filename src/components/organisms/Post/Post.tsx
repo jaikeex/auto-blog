@@ -1,7 +1,6 @@
-import { PostSection } from 'components/atoms';
-import { Card } from 'components/molecules';
-import { PostKeyword } from 'components/molecules';
 import * as React from 'react';
+import { PostSection } from 'components/atoms';
+import { Card, PostKeyword } from 'components/molecules';
 
 export interface PostProps extends React.PropsWithChildren {
   description?: string;

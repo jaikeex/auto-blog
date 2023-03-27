@@ -2,13 +2,10 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { Logo } from 'components/molecules';
-import { Post } from 'types/post';
+import { Post } from 'types';
 import { usePostContext } from 'store/postsContext';
-import { Button } from 'components/atoms';
-import { TokensInfo } from 'components/molecules';
-import { PostLink } from 'components/atoms';
-import { UserPanel } from 'components/molecules';
-import { TextButton } from 'components/atoms';
+import { Button, PostLink, TextButton } from 'components/atoms';
+import { TokensInfo, UserPanel } from 'components/molecules';
 
 export interface AppLayoutProps extends React.PropsWithChildren {
   availableTokens?: number;

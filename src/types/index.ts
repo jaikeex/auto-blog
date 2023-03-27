@@ -1,1 +1,2 @@
-export * from './page-with-layout';
+export * from './pageWithLayout';
+export * from './post';
