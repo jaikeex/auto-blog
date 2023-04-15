@@ -7,9 +7,7 @@ import { getAppProps } from 'utils/get-app-props';
 import { GetServerSidePropsContext } from 'next';
 import { Button } from 'components/atoms/Button';
 
-export interface TokenTopupPageProps {}
-
-const TokenTopupPage: NextPageWithLayout<TokenTopupPageProps> = (props) => {
+const TokenTopupPage: NextPageWithLayout = () => {
   const buttonClickHandler = async () => {
     const response = await fetch('/api/add-tokens', {
       method: 'POST'

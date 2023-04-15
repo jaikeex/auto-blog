@@ -6,9 +6,7 @@ import type { AppLayoutProps } from 'components';
 import { getAppProps } from 'utils/get-app-props';
 import { GetServerSidePropsContext } from 'next';
 
-export interface SuccessPageProps {}
-
-const SuccessPage: NextPageWithLayout<SuccessPageProps> = (props) => {
+const SuccessPage: NextPageWithLayout = () => {
   return (
     <div className="w-full flex justify-center items-center h-screen max-h-80">
       <h1>Thank you for your purchase!</h1>

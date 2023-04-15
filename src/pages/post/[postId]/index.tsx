@@ -20,7 +20,6 @@ export interface PostPageProps {
   postId?: string;
 }
 
-/* @ts-ignore */
 const PostPage: NextPageWithLayout<PostPageProps> = ({
   title = '',
   content = '',

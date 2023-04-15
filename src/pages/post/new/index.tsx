@@ -8,9 +8,7 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next';
 import { getAppProps } from 'utils/get-app-props';
 
-export interface NewPostPageProps {}
-
-const NewPostPage: NextPageWithLayout<NewPostPageProps> = (props) => {
+const NewPostPage: NextPageWithLayout = () => {
   const [topic, setTopic] = useState<string>('');
   const [keywords, setKeywords] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
