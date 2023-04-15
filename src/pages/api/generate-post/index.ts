@@ -78,7 +78,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
       {
         role: 'user',
-        content: `Generate appropriate title tag text for the above blog post.`
+        content: `Generate appropriate title for the above blog post.`
       }
     ]
   });
@@ -114,9 +114,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const postTitle = postTitleResponse.data?.choices[0]?.message.content || '';
   const postMeta = postMetaResponse.data?.choices[0]?.message.content || '';
 
-  console.log(postContent);
   console.log(postTitle);
-  console.log(postMeta);
+
+  const strippedTitle = postTitle.replace(/^"|"$/g, '');
 
   await db.collection('users').updateOne(
     {
@@ -131,7 +131,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const post = await db.collection('posts').insertOne({
     content: postContent,
-    title: postTitle,
+    title: strippedTitle,
     description: postMeta,
     topic,
     keywords,
