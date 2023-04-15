@@ -19,7 +19,7 @@ const PostsContext = React.createContext<PostsContextProps>({
 });
 
 interface PostReducerAction {
-  type: 'ADD_POSTS' | 'DELETE_POST';
+  type: 'ADD_POSTS' | 'DELETE_POST' | 'RELOAD_POSTS';
   posts?: Post[];
   postId?: string;
 }
@@ -29,6 +29,9 @@ export const usePostContext = () => React.useContext(PostsContext);
 const postReducer = (state: Post[], action: PostReducerAction) => {
   let newState: Post[];
   switch (action.type) {
+    case 'RELOAD_POSTS':
+      newState = action.posts;
+      return newState;
     case 'ADD_POSTS':
       newState = [...state];
       action.posts.forEach((post: Post) => {
@@ -49,10 +52,14 @@ export const PostsProvider = ({ children }) => {
   const [allPostsLoaded, setAllPostsLoaded] = useState<boolean>(false);
 
   const setPostsFromSSR = React.useCallback((postsFromSSR = []) => {
-    dispatchPosts({ type: 'ADD_POSTS', posts: postsFromSSR });
+    if (postsFromSSR.length === 0) {
+      setAllPostsLoaded(true);
+    }
+    dispatchPosts({ type: 'RELOAD_POSTS', posts: postsFromSSR });
   }, []);
 
   const loadPosts = React.useCallback(async (lastPostDate: string, getNewerPosts = false) => {
+    console.log(lastPostDate);
     const result = await fetch('/api/get-posts', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -60,9 +67,10 @@ export const PostsProvider = ({ children }) => {
     });
     const json = await result.json();
     const postResult: Post[] = json.posts || [];
-    if (postResult.length < 2) {
+    if (postResult.length < 5) {
       setAllPostsLoaded(true);
     }
+    console.log(postResult);
     dispatchPosts({ type: 'ADD_POSTS', posts: postResult });
   }, []);
 

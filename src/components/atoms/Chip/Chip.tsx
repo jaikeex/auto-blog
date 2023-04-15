@@ -4,7 +4,7 @@ export interface ChipProps extends React.PropsWithChildren, React.ComponentProps
 
 const Chip: React.FC<ChipProps> = ({ children = null, ...props }): JSX.Element => {
   return (
-    <div className="rounded-full p-1 bg-slate-800 text-white" {...props}>
+    <div className="rounded-full py-1 px-3 bg-slate-800 text-white" {...props}>
       {children}
     </div>
   );

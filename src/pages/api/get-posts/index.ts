@@ -21,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           [getNewerPosts ? '$gt' : '$lt']: new Date(lastPostDate)
         }
       })
-      .limit(getNewerPosts ? 0 : 2)
+      .limit(getNewerPosts ? 0 : 5)
       .sort({ created: -1 })
       .toArray();
     res.status(200).json({ posts });

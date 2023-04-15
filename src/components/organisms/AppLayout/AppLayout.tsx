@@ -32,6 +32,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     if (postId && !postsFromSSR.find((post) => post._id === postId)) {
       loadPosts(created, true);
     }
+    console.log('loading new posts');
+    console.log(postsFromSSR);
     setPostsFromSSR(postsFromSSR);
   }, [postId, postsFromSSR, setPostsFromSSR, created, loadPosts]);
 
