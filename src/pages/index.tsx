@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import HeroImage from 'assets/hero.webp';
+import HeroImage from 'assets/hero.jpg';
 import { Logo, Button } from 'components';
 
 export default function Home() {
