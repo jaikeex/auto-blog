@@ -48,7 +48,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           },
           {
             $inc: {
-              availableTokens: 10
+              availableTokens: 50
             },
             $setOnInsert: {
               auth0Id: auth0Id.sub
